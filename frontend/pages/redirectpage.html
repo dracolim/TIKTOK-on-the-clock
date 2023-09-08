@@ -23,7 +23,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Passage Library -->
-    <script src="https://psg.so/web.js" defer></script>
+    <script src="https://psg.so/web.js"></script>
     <!-- flowbite -->
     <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
 </head>
@@ -43,52 +43,62 @@
         </button>
     </div>
 
-    <!-- <script type="module" src="https://psg.so/web.js" defer>
-        // import { Passage } from 'https://cdn.passage.id/passage-js.js';
-    
-        // (async () => {
-        //     const psg = new Passage('E3hjWQlq03LsYPBMG1ESlWbQ');
-        //     const user = psg.getCurrentUser();
-        //     const userInfo = await user.userInfo();
-        //     console.log(userInfo)
-        // })();
+    <script type="module">
+        import { Passage } from 'https://cdn.passage.id/passage-js.js';
 
-        console.log('HERE')
-
-        import { PassageUser } from '@passageidentity/passage-auth/passage-user';
+        window.isLoading = true;
+        window.isAuthorized = false;
+        window.username = '';
 
         (async () => {
-            console.log('before')
-            const user = new PassageUser()
-            console.log('testing')
-            const userInfo = await user.userInfo()
-            console.log('this is info ', userInfo)
-            const signedOut = await user.signOut()
+            const psg = new Passage('E3hjWQlq03LsYPBMG1ESlWbQ');
+            const user = psg.getCurrentUser();
+            const userInfo = await user.userInfo();
+            console.log(userInfo);
+
+            if (!userInfo) {
+                window.isLoading = false;
+                return;
+            }
+
+            window.username = userInfo.email;
+            
+            try{
+                const response = await fetch("/auth-backend", {
+                    method: 'POST', 
+                    headers: {
+                        'Content-Type':  'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: userInfo.email, 
+                        tt_username: userInfo.user_metadata.tiktok_username, 
+                        authToken: localStorage.getItem("psg_auth_token"),
+                    }),
+                })
+                const data = await response.json()
+                if (data) {
+                    // backend will return session variable or smth
+                    console.log("Success: ", data)
+                    window.isAuthorized = true;
+                    window.isLoading = false;
+                }
+            }
+            catch (error) {
+                alert(error)
+                window.isAuthorized = false;
+                window.isLoading = false;
+                // should redirect back to login page
+            }
         })();
-
-    </script> -->
+    </script>
 </body>
-
 <script>
-    console.log('HERE')
-
-    import {
-        PassageUser
-    } from '@passageidentity/passage-auth/passage-user';
-
-    (async () => {
-        console.log('before')
-        const user = new PassageUser()
-        console.log('testing')
-        const userInfo = await user.userInfo()
-        console.log('this is info ', userInfo)
-        const signedOut = await user.signOut()
-    })();
-
     const vm = new Vue({
         el: '#main-container',
         data: {
-
+            isLoading: window.isLoading,
+            isAuthorized: window.isAuthorized,
+            username: window.username
         },
         mounted: async function () {
 
@@ -101,5 +111,4 @@
         }
     });
 </script>
-
 </html>
