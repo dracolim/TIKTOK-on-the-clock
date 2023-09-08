@@ -3,6 +3,8 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from dotenv import load_dotenv
+import stripe
+
 
 load_dotenv()
 
@@ -15,6 +17,11 @@ DB_PASSWORD = environ.get('DB_PASSWORD')
 DB_PORT = environ.get("DB_PORT")
 DB_NAME = environ.get('DB_NAME')
 
+CUSTOMPRICEKEY = environ.get("CUSTOM_PRICE_KEY") 
+stripe.api_key = environ.get("STRIPE_PRIVATE_KEY") 
+webhookKey = environ.get("WEB_HOOK_KEY")
+
+
 app = Flask(__name__)
 
 CORS(app)
@@ -26,5 +33,7 @@ db = SQLAlchemy(app)
 
 app.config['SECURITY_PASSWORD_SALT'] = environ.get("SECURITY_PASSWORD_SALT", default="very-important")
 
-from .user import User
+from .user import User, auth as auth_blueprint
 from . import registration, transactions
+
+app.register_blueprint(auth_blueprint)

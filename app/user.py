@@ -1,7 +1,10 @@
 from app import app, db
-from flask import jsonify, request, url_for, render_template
+from flask import jsonify, request, url_for, render_template, Blueprint, g
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from passageidentity import Passage
+import os
+from passageidentity import Passage, PassageError
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -10,7 +13,7 @@ class User(db.Model):
     Username = db.Column(db.String)
     EmailAddress = db.Column(db.String)
     Password = db.Column(db.String)
-    Wallet_Balance = db.Column(db.Integer)
+    Wallet_Balance = db.Column(db.Float)
     Phone_Number = db.Column(db.Integer)
     
 
@@ -25,6 +28,25 @@ class User(db.Model):
             "Phone_Number": self.Phone_Number
             
         }
+
+auth = Blueprint('auth', __name__)
+
+PASSAGE_API_KEY = os.environ.get('PASSAGE_API_KEY')
+PASSAGE_APP_ID = os.environ.get('PASSAGE_APP_ID')
+
+try:
+    psg = Passage(PASSAGE_APP_ID, PASSAGE_API_KEY)
+except PassageError as e:
+    print(e)
+    exit()
+
+
+@auth.before_request
+def before_request():
+    try:
+        g.user = psg.authenticateRequest(request)
+    except PassageError as e:
+        return "Not Authenticated", 404
 
 # Function and Route for user login
 @app.route("/login", methods=['POST'])
@@ -44,7 +66,7 @@ def login():
         return "Invalid user credentials", 401
 
 # Function and Route for getting All Users in the DB
-@app.route("/user")
+@auth.route("/user")
 def getAllUser():
     userList = User.query.all()
     
@@ -52,7 +74,7 @@ def getAllUser():
     
 
 # Function and Route for getting a User by ID
-@app.route("/user/<int:id>")
+@auth.route("/user/<int:id>")
 def getUserByID(id: int):
     userList = User.query.filter_by(User_ID=id).all()
     if len(userList):
@@ -62,7 +84,7 @@ def getUserByID(id: int):
     return "There are no such user with ID: " + str(id), 406
 
 # Function and Route to update a User's Balance
-@app.route("/updateBalance", methods=['PUT'])
+@auth.route("/updateBalance", methods=['PUT'])
 def updateBalance():
     """
     Sample Request
@@ -86,4 +108,3 @@ def updateBalance():
     except Exception as e:
         db.session.rollback()
         return "An error occurred while updating the User's balance. " + str(e), 406
-

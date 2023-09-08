@@ -1,13 +1,7 @@
 {
-  "dependencies": {
-    "@passageidentity/passage-elements": "^1.11.0",
-    "bootstrap-icons": "^1.10.5",
-    "vue": "^3.3.4"
-  },
   "devDependencies": {
-    "@babel/cli": "^7.22.15",
-    "@babel/core": "^7.22.15",
-    "@babel/preset-env": "^7.22.15"
-  },
-  "proxy": "http://localhost:5000"
+    "autoprefixer": "^10.4.15",
+    "postcss": "^8.4.29",
+    "tailwindcss": "^3.3.3"
+  }
 }
