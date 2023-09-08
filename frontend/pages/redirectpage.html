@@ -24,33 +24,26 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Passage Library -->
     <script src="https://psg.so/web.js" defer></script>
+    <!-- flowbite -->
+    <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
 </head>
 
 <body>
-    
+
     <div id="main-container">
         <p>This is redirected page</p>
         <div>sign out button</div>
-        
-        <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
-            <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+
+        <button
+            class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+            <span
+                class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                 Purple to blue
             </span>
         </button>
-
-
-
-
-
-
-
     </div>
-    <!-- flowbite -->
-    <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
-    <script>
-        console.log("HERE")
-    </script>
-    <script type="module" src="https://psg.so/web.js" defer>
+
+    <!-- <script type="module" src="https://psg.so/web.js" defer>
         // import { Passage } from 'https://cdn.passage.id/passage-js.js';
     
         // (async () => {
@@ -73,10 +66,25 @@
             const signedOut = await user.signOut()
         })();
 
-    </script>
+    </script> -->
 </body>
 
 <script>
+    console.log('HERE')
+
+    import {
+        PassageUser
+    } from '@passageidentity/passage-auth/passage-user';
+
+    (async () => {
+        console.log('before')
+        const user = new PassageUser()
+        console.log('testing')
+        const userInfo = await user.userInfo()
+        console.log('this is info ', userInfo)
+        const signedOut = await user.signOut()
+    })();
+
     const vm = new Vue({
         el: '#main-container',
         data: {
