@@ -5,9 +5,9 @@ const ethers = require("ethers");
 const app = express();
 
 const port = 3000;
-
+// having trouble connecting to smart contract on sepolia, might be using the wrong function
 async function createWallet(sellerTtId) {
-  const TTWalletManager = await ethers.ContractFactory("TTWalletManager");
+  const TTWalletManager = await ethers.getContractFactory("TTWallet");
   const manager = TTWalletManager.attach(
     "0xE2C1985a6286be66c13128531993fDb8D212c9c0"
   );
