@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .font {
+            font-family: proxima-nova, sans-serif;
+            font-style: normal;
+            font-weight: 100;
+        }
+    </style>
+
+    <!-- Vue2 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Flowbite -->
+    <link rel="stylesheet" href="https://unpkg.com/flowbite@1.5.3/dist/flowbite.min.css" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.ethers.io/scripts/ethers-v3.min.js"
+        charset="utf-8"
+        type="text/javascript">
+    </script>
+</head>
+
+<body>
+    <!-- INSERT CODE FROM HERE -->
+    <div id="main-container">
+        <p class="font">crypto stuff</p>
+        <button class="bg-green-300 rounded p-4" @click="connectWallet">
+            Connect Wallet
+        </button>
+
+
+
+
+
+
+
+
+    </div>
+    <!-- flowbite -->
+    <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
+</body>
+
+<script type="module">
+    
+    const vm = new Vue({
+        el: '#main-container',
+        data: {
+
+        },
+        mounted: async function () {
+            
+        },
+        methods: {
+            async connectWallet() {
+                try {
+                    const { ethereum } = window
+                    if (!ethereum) {
+                        alert('Must connect to MetaMask!')
+                        return
+                    }
+                    const myAccounts = await ethereum.request({ method: 'eth_requestAccounts' })
+
+                    console.log('Connected: ', myAccounts[0])
+                    account.value = myAccounts[0]
+                }
+                catch (error) {
+                    console.log(error)
+                }
+            }
+        },
+        created() {
+
+        }
+    });
+</script>
+
+</html>
