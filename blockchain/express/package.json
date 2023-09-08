@@ -1,0 +1,14 @@
+{
+  "name": "node-backend",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server",
+    "dev": "nodemon server"
+  },
+  "dependencies": {
+    "ethers": "^5.0.0",
+    "express": "~4.16.1",
+    "nodemon": "^3.0.1"
+  }
+}

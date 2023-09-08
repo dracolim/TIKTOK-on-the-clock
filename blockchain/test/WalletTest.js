@@ -5,10 +5,10 @@ const { it } = require("mocha");
 describe("TTWallet", function () {
   beforeEach(async function () {
     ttid = "abc";
-    pin = "123";
+
     [owner] = await ethers.getSigners();
     TTWallet = await ethers.getContractFactory("TTWallet");
-    testWallet = await TTWallet.deploy(ttid, pin);
+    testWallet = await TTWallet.deploy(ttid);
     testWalletAddress = await testWallet.getAddress();
     provider = await ethers.getDefaultProvider();
   });
@@ -35,14 +35,14 @@ describe("TTWallet", function () {
 describe("TTWalletManager", function () {
   beforeEach(async function () {
     sellerTtid = "abc";
-    sellerPin = "123";
+
     buyerTtid = "def";
-    buyerPin = "456";
+
     [add1, seller, buyer] = await ethers.getSigners();
     TTWallet = await ethers.getContractFactory("TTWallet");
     TTWalletManager = await ethers.getContractFactory("TTWalletManager");
 
-    sellerWallet = await TTWallet.deploy(sellerTtid, sellerPin);
+    sellerWallet = await TTWallet.deploy(sellerTtid);
     // buyerWallet = await TTWallet.deploy(buyerTtid, buyerPin);
     sellerAddress = await sellerWallet.getAddress();
     // buyerAddress = await buyerWallet.getAddress();
@@ -58,10 +58,10 @@ describe("TTWalletManager", function () {
   });
   describe("Register", function () {
     it("Seller Registered", async function () {
-      const register = await walletManager.register(sellerTtid, sellerAddress);
+      const register = await walletManager.register(sellerTtid);
       expect(register)
         .to.emit(walletManager, "SellerRegistered")
-        .withArgs(sellerTtid, sellerAddress);
+        .withArgs(sellerTtid);
     });
   });
   describe("Deposit", function () {

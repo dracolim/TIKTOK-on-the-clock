@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: MIT
 import "./StringUtils.sol";
+import "./TTWallet.sol";
 pragma solidity ^0.8.19;
 
 // buyers pay to TTWalletManager
 contract TTWalletManager {
     address owner;
+    TTWallet[] private sellers;
     mapping(address => uint) balances;
     // username to wallet address
     mapping(string => address) userToWallet;
@@ -16,8 +18,16 @@ contract TTWalletManager {
     event SellerRegistered(string tiktokId, address sellerAddress);
     event BuyerDeposited(string sellerTiktokId, string buyerTiktokId);
 
-    function register(string memory tiktokId, address sellerAddress) external {
+    function newSeller(string memory tiktokId) private returns (address) {
+        TTWallet seller = new TTWallet(tiktokId);
+        address sellerAddress = address(seller);
+        sellers.push(seller);
+        return sellerAddress;
+    }
+
+    function register(string memory tiktokId) external {
         require(msg.sender == owner);
+        address sellerAddress = newSeller(tiktokId);
         userToWallet[tiktokId] = sellerAddress;
         emit SellerRegistered(tiktokId, sellerAddress);
     }
